@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EPK-Werkstatt — Ereignisgesteuerte Prozessketten intuitiv lernen</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header id="app-header">
+  <div class="header-title">
+    <h1>EPK-Werkstatt</h1>
+    <p class="subtitle">Ereignisgesteuerte Prozessketten intuitiv lernen und bauen</p>
+  </div>
+  <div id="toolbar" class="toolbar">
+    <button type="button" id="btn-tutorial" title="Interaktive Kurztour starten">🧭 Tutorial starten</button>
+    <button type="button" id="btn-reset" title="Zeichenfläche leeren">🗑️ Neu</button>
+    <button type="button" id="btn-export-json" title="Modell als JSON-Datei speichern">⬇️ JSON exportieren</button>
+    <button type="button" id="btn-import-json" title="JSON-Datei laden">⬆️ JSON importieren</button>
+    <input type="file" id="input-import-json" accept="application/json" hidden>
+    <button type="button" id="btn-export-svg" title="Modell als SVG-Bild speichern">🖼️ SVG exportieren</button>
+    <a id="link-leitfaden" href="../docs/leitfaden-azubis.md" target="_blank" rel="noopener" title="Geschriebener Leitfaden mit Übungen">📘 Leitfaden</a>
+  </div>
+</header>
+
+<div id="app-body">
+  <aside id="palette" aria-label="Symbolpalette">
+    <h2>Symbole</h2>
+    <p class="palette-hint">Ziehen &amp; auf die Fläche loslassen — oder anklicken zum Platzieren.</p>
+    <div class="palette-item" draggable="true" data-symbol="event" title="Ein eingetretener Zustand, der den Ablauf auslöst.">
+      <span class="palette-icon palette-icon-event"></span>
+      <span class="palette-label">Ereignis</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="function" title="Eine Tätigkeit, die ausgeführt wird.">
+      <span class="palette-icon palette-icon-function"></span>
+      <span class="palette-label">Funktion</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="and" title="UND: alle Zweige laufen parallel und zwingend.">
+      <span class="palette-icon palette-icon-and">∧</span>
+      <span class="palette-label">UND-Konnektor</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="or" title="ODER: mindestens ein Zweig wird ausgeführt.">
+      <span class="palette-icon palette-icon-or">∨</span>
+      <span class="palette-label">ODER-Konnektor</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="xor" title="XOR: genau ein Zweig wird ausgeführt.">
+      <span class="palette-icon palette-icon-xor">×</span>
+      <span class="palette-label">XOR-Konnektor</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="process_interface" title="Verweist auf einen anderen (Teil-)Prozess.">
+      <span class="palette-icon palette-icon-process_interface"></span>
+      <span class="palette-label">Prozesswegweiser</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="org_unit" title="Wer die Funktion ausführt.">
+      <span class="palette-icon palette-icon-org_unit"></span>
+      <span class="palette-label">Organisationseinheit</span>
+    </div>
+    <div class="palette-item" draggable="true" data-symbol="info_object" title="Daten/Dokumente einer Funktion.">
+      <span class="palette-icon palette-icon-info_object"></span>
+      <span class="palette-label">Informationsobjekt</span>
+    </div>
+  </aside>
+
+  <main id="canvas-wrap">
+    <svg id="epk-canvas" width="1800" height="1200" tabindex="0"></svg>
+    <p class="canvas-hint">Tipp: Doppelklick auf ein Symbol zum Umbenennen · Entf zum Löschen der Auswahl</p>
+  </main>
+
+  <aside id="side-panel" aria-label="Regeln und Hinweise">
+    <section id="cheatsheet-section">
+      <button type="button" id="cheatsheet-toggle" aria-expanded="false">📋 Spickzettel: Symbole &amp; Regeln</button>
+      <div id="cheatsheet-content" hidden>
+        <h3>Symbole</h3>
+        <ul class="cheat-list">
+          <li><b>Ereignis</b> (rotes Sechseck) — ein eingetretener Zustand, entscheidet nichts selbst.</li>
+          <li><b>Funktion</b> (grünes Rechteck) — eine Tätigkeit, kann verzweigen.</li>
+          <li><b>UND / ODER / XOR</b> (gelber Kreis) — Konnektoren für Verzweigungen.</li>
+          <li><b>Prozesswegweiser</b> (blaues Fünfeck) — verweist auf einen anderen Prozess.</li>
+          <li><b>Organisationseinheit</b> (gelbes Oval) — wer führt die Funktion aus.</li>
+          <li><b>Informationsobjekt</b> (blaues Rechteck) — Daten/Dokumente einer Funktion.</li>
+        </ul>
+        <h3>Die wichtigsten Regeln</h3>
+        <ol class="cheat-list">
+          <li>Start und Ende sind immer ein Ereignis oder ein Prozesswegweiser.</li>
+          <li>Ereignis und Funktion wechseln sich immer ab — nie zwei gleiche direkt hintereinander.</li>
+          <li>Nach einem Ereignis ist nur eine Funktion oder ein UND-Konnektor erlaubt — nie ODER/XOR, denn Ereignisse entscheiden nicht.</li>
+          <li>Nach einer Funktion sind UND, ODER und XOR erlaubt.</li>
+          <li>Organisationseinheiten und Informationsobjekte hängen seitlich an einer Funktion.</li>
+        </ol>
+      </div>
+    </section>
+    <section id="validation-panel" aria-live="polite">
+      <h2>Live-Hinweise</h2>
+      <p id="validation-empty">Noch keine Hinweise — leg los!</p>
+      <ul id="validation-list"></ul>
+    </section>
+  </aside>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/symbols.js"></script>
+<script src="js/model.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/export.js"></script>
+<script src="js/tutorial.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
