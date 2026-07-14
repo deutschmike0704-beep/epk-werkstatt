@@ -1,3 +1,58 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "T-0001",
+      "title": "CLAUDE.md auf EPK-Domäne anpassen",
+      "description": "Projekt-Steckbrief ergänzt: Zielgruppe Azubis, Tech-Stack-Entscheidung (Vanilla JS, kein Build-Step), App-Ordnerstruktur.",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T10:00:00Z",
+      "completed_at": "2026-07-14T10:05:00Z"
+    },
+    {
+      "id": "T-0002",
+      "title": "epk-notation Skill anlegen",
+      "description": "Recherchebasierte Referenz für EPK-Normsymbole und Syntaxregeln unter .claude/skills/epk-notation/SKILL.md.",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T10:05:00Z",
+      "completed_at": "2026-07-14T10:15:00Z"
+    },
+    {
+      "id": "T-0003",
+      "title": "EPK-Editor MVP bauen",
+      "description": "app/ mit Symbolpalette, SVG-Canvas, Drag&Drop, Verbindungen, Live-Validierung, localStorage-Autosave, JSON-/SVG-Export.",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T10:15:00Z",
+      "completed_at": "2026-07-14T11:00:00Z"
+    },
+    {
+      "id": "T-0004",
+      "title": "Interaktive Tutorials/Leitfäden für Azubis einbauen",
+      "description": "Spotlight-Tour (app/js/tutorial.js) plus geschriebener Leitfaden mit Übungsaufgaben (docs/leitfaden-azubis.md).",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T11:00:00Z",
+      "completed_at": "2026-07-14T11:20:00Z"
+    },
+    {
+      "id": "T-0005",
+      "title": "Code-Review der App + Fixes",
+      "description": "Fresh-eyes Review fand Escape-Bug bei Verbindungen, fehlende Regel zu impliziter Verzweigung, Grammatikfehler in Hinweistexten und fehlende NaN-Absicherung beim Import — alle behoben, epk-notation Skill auf 0.2.0 aktualisiert.",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T11:20:00Z",
+      "completed_at": "2026-07-14T11:40:00Z"
+    },
+    {
+      "id": "T-0006",
+      "title": "GitHub-Repo erstellen und synchronisieren",
+      "description": "Öffentliches Repo deutschmike0704-beep/epk-werkstatt via gh CLI erstellt und gepusht.",
+      "priority": "P1",
+      "status": "done",
+      "created_at": "2026-07-14T11:40:00Z",
+      "completed_at": "2026-07-14T11:45:00Z"
+    }
+  ]
 }
