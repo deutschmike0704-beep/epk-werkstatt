@@ -10,6 +10,47 @@ welcher Workflow bei jeder Aufgabe abläuft, und welche Standards gelten.
 
 ---
 
+## 0. Projekt-Steckbrief: EPK-Werkstatt
+
+**Was:** Eine intuitive Web-App zum Erstellen ereignisgesteuerter Prozessketten (EPK). Zielgruppe sind
+**Auszubildende**, die EPK-Notation lernen — nicht Prozessmodellierungs-Profis. Das Tool priorisiert
+Verständlichkeit und Lerneffekt vor Funktionsumfang.
+
+**Kernfeatures:**
+- Symbolpalette mit den EPK-Normsymbolen (Ereignis, Funktion, Konnektoren UND/ODER/XOR, Prozesswegweiser,
+  Organisationseinheit, Informationsobjekt), Drag & Drop auf eine Zeichenfläche.
+- Verbindungen zwischen Symbolen per Ziehen aus Anschlusspunkten.
+- Echtzeit-Hinweise bei Verstößen gegen die EPK-Syntaxregeln (z. B. Ereignis/Funktion-Alternierung),
+  didaktisch formuliert statt nur "Fehler".
+- Interaktive Tutorial-Overlays (Spotlight-Tour) und ein geschriebener Leitfaden für Einsteiger.
+- Lokales Speichern/Laden (localStorage) sowie JSON-/SVG-Export.
+
+**Tech-Stack-Entscheidung:** Vanilla HTML/CSS/JavaScript, **kein Build-Step, keine Frameworks/Dependencies**.
+Begründung: kleine, in sich geschlossene App; Zielgruppe (Azubis) soll den Quellcode ohne npm-Toolchain
+lesen/verstehen können; Deployment direkt über GitHub Pages ohne CI-Build. Diese Entscheidung gilt, bis ein
+konkreter Bedarf (z. B. komplexe State-Verwaltung) das Gegenteil begründet — siehe Abschnitt 8
+(keine Abstraktion für hypothetische Zukunft).
+
+**Ordnerstruktur der App:**
+```
+app/
+  index.html          Einstiegspunkt, lädt Palette/Canvas/Tutorial-UI
+  css/style.css        Styles (hell/dunkel-freundlich, responsive)
+  js/symbols.js         Normsymbol-Definitionen (Form, Farbe, Anschlusspunkte)
+  js/model.js           Graph-Datenmodell + EPK-Syntaxvalidierung
+  js/canvas.js           Rendering, Drag & Drop, Verbindungen zeichnen
+  js/tutorial.js         Interaktive Spotlight-Tour für Einsteiger
+  js/storage.js          localStorage Speichern/Laden
+  js/export.js           JSON-/SVG-Export
+docs/
+  leitfaden-azubis.md   Geschriebener Einsteiger-Leitfaden mit Übungsbeispielen
+```
+
+Domänenwissen zu EPK-Normsymbolen und -Syntaxregeln liegt im Skill `.claude/skills/epk-notation/SKILL.md`
+(Layer 02) — dort nachschlagen statt aus dem Gedächtnis zu raten, bevor Symbole/Regeln geändert werden.
+
+---
+
 ## 1. Architektur — die 7 Schichten (Layer 00–06)
 
 ```
