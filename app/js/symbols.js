@@ -10,6 +10,7 @@
   const Symbols = {
     event: {
       key: 'event',
+      genus: 'n',
       label: 'Ereignis',
       shortDesc: 'Ein eingetretener Zustand, der den Ablauf auslöst. Trifft selbst keine Entscheidung.',
       color: '#e8583a',
@@ -29,6 +30,7 @@
     },
     function: {
       key: 'function',
+      genus: 'f',
       label: 'Funktion',
       shortDesc: 'Eine Tätigkeit, die ausgeführt wird. Kann den Ablauf verzweigen.',
       color: '#3fa34d',
@@ -44,6 +46,7 @@
     },
     and: {
       key: 'and',
+      genus: 'm',
       label: 'UND-Konnektor',
       symbolChar: '∧',
       shortDesc: 'Alle ausgehenden Zweige laufen parallel und zwingend. Darf direkt nach einem Ereignis stehen.',
@@ -58,6 +61,7 @@
     },
     or: {
       key: 'or',
+      genus: 'm',
       label: 'ODER-Konnektor',
       symbolChar: '∨',
       shortDesc: 'Mindestens einer der ausgehenden Zweige wird ausgeführt. Nur nach einer Funktion erlaubt.',
@@ -72,6 +76,7 @@
     },
     xor: {
       key: 'xor',
+      genus: 'm',
       label: 'XOR-Konnektor',
       symbolChar: '×',
       shortDesc: 'Genau einer der ausgehenden Zweige wird ausgeführt. Nur nach einer Funktion erlaubt.',
@@ -86,6 +91,7 @@
     },
     process_interface: {
       key: 'process_interface',
+      genus: 'm',
       label: 'Prozesswegweiser',
       shortDesc: 'Verweist auf einen anderen (Teil-)Prozess. Darf Start oder Ende einer EPK sein.',
       color: '#2f8fd1',
@@ -103,6 +109,7 @@
     },
     org_unit: {
       key: 'org_unit',
+      genus: 'f',
       label: 'Organisationseinheit',
       shortDesc: 'Wer die Funktion ausführt (Person, Rolle, Abteilung). Wird seitlich an eine Funktion angebunden.',
       color: '#f2c14e',
@@ -116,6 +123,7 @@
     },
     info_object: {
       key: 'info_object',
+      genus: 'n',
       label: 'Informationsobjekt',
       shortDesc: 'Daten/Dokumente, die eine Funktion braucht oder erzeugt. Wird seitlich an eine Funktion angebunden.',
       color: '#7fb3e8',

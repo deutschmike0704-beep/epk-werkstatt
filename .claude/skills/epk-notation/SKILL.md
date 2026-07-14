@@ -5,7 +5,7 @@ description: Use this skill whenever code, UI-Texte, Validierungslogik oder Tuto
 
 ## Metadaten
 
-- **Version:** 0.1.0
+- **Version:** 0.2.0
 - **Owner:** epk-werkstatt
 - **Status:** stable
 - **Dependencies:**
@@ -46,22 +46,31 @@ einfach gehalten, damit sie 1:1 in UI-Tooltips/Tutorial-Text übernommen werden 
    einen **UND-Konnektor** (parallele Funktionen ohne Entscheidung), nie in eine Verzweigung mit Auswahl.
 4. **Funktionen dürfen verzweigen:** Nach einer Funktion sind UND-, ODER- und XOR-Konnektoren erlaubt,
    da eine Funktion (bzw. ihr Ergebnis) eine Entscheidung auslösen kann.
-5. **Konnektor-Typ-Konsistenz beim Zusammenführen:** Ein Split-Konnektor sollte mit dem passenden
+5. **Verzweigung/Zusammenführung nur über explizite Konnektoren:** Ein Ereignis, eine Funktion oder ein
+   Prozesswegweiser darf nie mehr als eine ausgehende bzw. eingehende Kontrollfluss-Verbindung haben —
+   jede Verzweigung (Split) oder Zusammenführung (Join) läuft zwingend über einen UND-/ODER-/XOR-Konnektor,
+   nie implizit über mehrere direkte Pfeile an einem Nicht-Konnektor-Symbol.
+6. **Konnektor-Typ-Konsistenz beim Zusammenführen:** Ein Split-Konnektor sollte mit dem passenden
    Join-Konnektor desselben Typs wieder zusammengeführt werden (didaktisch: "was du aufmachst, machst du
    auch wieder zu").
-6. **Organisationseinheiten und Informationsobjekte hängen seitlich** an Funktionen und sind **nicht**
+7. **Organisationseinheiten und Informationsobjekte hängen seitlich** an Funktionen und sind **nicht**
    Teil des linearen Kontrollflusses (keine Pfeile zu/von Ereignissen oder Konnektoren).
-7. **Ein Konnektor hat entweder mehrere Eingänge (Join) oder mehrere Ausgänge (Split)**, nicht sinnvoll
+8. **Ein Konnektor hat entweder mehrere Eingänge (Join) oder mehrere Ausgänge (Split)**, nicht sinnvoll
    beides gleichzeitig in derselben Verzweigungslogik (Ausnahme: dokumentierte Sonderfälle, für die App
    hier nicht relevant — Split und Join werden als getrennte Konnektor-Knoten modelliert).
 
 ## Anwendung in der App
 
-- `app/js/symbols.js` definiert Form/Farbe/Anschlusspunkte exakt nach obiger Tabelle.
-- `app/js/model.js` implementiert Regel 1–4 als Live-Validierung (Regel 5–6 als Hinweise, nicht als
-  hartes Blockieren, da Einsteiger sonst frustriert werden — siehe Leitfaden-Philosophie).
+- `app/js/symbols.js` definiert Form/Farbe/Anschlusspunkte exakt nach obiger Tabelle (inkl. `genus`-Feld
+  je Symbol für grammatikalisch korrekte deutsche Hinweistexte — Ereignis ist sächlich, Funktion weiblich,
+  alle Konnektoren/Prozesswegweiser männlich, Organisationseinheit weiblich, Informationsobjekt sächlich).
+- `app/js/model.js` implementiert Regel 1–5 als harte Live-Validierung (Fehler) und Regel 7 als weiche
+  Warnung, nicht als hartes Blockieren, da Einsteiger sonst frustriert werden. Regel 6
+  (Konnektor-Typ-Konsistenz beim Zusammenführen) ist **nicht** implementiert — das erfordert
+  Graph-Traversal zum Zuordnen von Split- zu Join-Konnektoren und würde die App für die Zielgruppe
+  überkomplizieren; bewusst ausgelassen (kein Scope-Creep).
 - Tutorial-Texte in `app/js/tutorial.js` und `docs/leitfaden-azubis.md` verwenden die Formulierungen aus
-  "Die wichtigsten Syntaxregeln" 1:1, damit Begriffe zwischen App und Doku konsistent bleiben.
+  "Die wichtigsten Syntaxregeln" sinngemäß, damit Begriffe zwischen App und Doku konsistent bleiben.
 
 ## Grenzen / Was dieser Skill NICHT tut
 

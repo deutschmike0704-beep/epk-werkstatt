@@ -4,6 +4,18 @@
     return prefix + '-' + (uidCounter++) + '-' + Math.random().toString(36).slice(2, 7);
   }
 
+  const ARTICLES = {
+    m: { nom: 'ein', dat: 'einem', akk: 'einen' },
+    f: { nom: 'eine', dat: 'einer', akk: 'eine' },
+    n: { nom: 'ein', dat: 'einem', akk: 'ein' }
+  };
+  function withArticle(typeKey, kasus) {
+    const def = EPK.Symbols[typeKey];
+    return `${ARTICLES[def.genus][kasus]} ${def.label}`;
+  }
+
+  const CONNECTOR_TYPES = ['and', 'or', 'xor'];
+
   class Model {
     constructor() {
       this.nodes = new Map();
@@ -78,7 +90,13 @@
       this.clear();
       (data.nodes || [])
         .filter((n) => EPK.Symbols[n.type])
-        .forEach((n) => this.nodes.set(n.id, { id: n.id, type: n.type, x: n.x, y: n.y, label: String(n.label || '') }));
+        .forEach((n) => this.nodes.set(n.id, {
+          id: n.id,
+          type: n.type,
+          x: Number.isFinite(n.x) ? n.x : 100,
+          y: Number.isFinite(n.y) ? n.y : 100,
+          label: String(n.label || '')
+        }));
       const validIds = new Set(this.nodes.keys());
       this.edges = (data.edges || []).filter((e) => validIds.has(e.from) && validIds.has(e.to));
       this.sideEdges = (data.sideEdges || []).filter((e) => validIds.has(e.from) && validIds.has(e.to));
@@ -105,22 +123,37 @@
 
       this.nodes.forEach((n) => {
         const isFlowStartEnd = n.type === 'event' || n.type === 'process_interface';
-        const hasIn = incoming.get(n.id).length > 0;
-        const hasOut = outgoing.get(n.id).length > 0;
-        if (!hasIn && !hasOut) return;
+        const isConnector = CONNECTOR_TYPES.includes(n.type);
+        const inCount = incoming.get(n.id).length;
+        const outCount = outgoing.get(n.id).length;
+        if (inCount === 0 && outCount === 0) return;
 
-        if (!hasIn && !isFlowStartEnd) {
+        if (inCount === 0 && !isFlowStartEnd) {
           issues.push({
             level: 'error',
             nodeId: n.id,
-            message: `"${n.label}": Eine EPK muss mit einem Ereignis oder Prozesswegweiser beginnen, nicht mit einer ${EPK.Symbols[n.type].label}.`
+            message: `"${n.label}": Eine EPK muss mit einem Ereignis oder Prozesswegweiser beginnen, nicht mit ${withArticle(n.type, 'dat')}.`
           });
         }
-        if (!hasOut && !isFlowStartEnd) {
+        if (outCount === 0 && !isFlowStartEnd) {
           issues.push({
             level: 'error',
             nodeId: n.id,
-            message: `"${n.label}": Eine EPK muss mit einem Ereignis oder Prozesswegweiser enden, nicht mit einer ${EPK.Symbols[n.type].label}.`
+            message: `"${n.label}": Eine EPK muss mit einem Ereignis oder Prozesswegweiser enden, nicht mit ${withArticle(n.type, 'dat')}.`
+          });
+        }
+        if (outCount > 1 && !isConnector) {
+          issues.push({
+            level: 'error',
+            nodeId: n.id,
+            message: `"${n.label}": ${withArticle(n.type, 'nom')} verzweigt hier ohne Konnektor in mehrere Richtungen — nutze einen UND-, ODER- oder XOR-Konnektor für Verzweigungen.`
+          });
+        }
+        if (inCount > 1 && !isConnector) {
+          issues.push({
+            level: 'error',
+            nodeId: n.id,
+            message: `"${n.label}": Hier laufen mehrere Verbindungen ohne Konnektor zusammen — nutze einen Konnektor zum Zusammenführen.`
           });
         }
       });
@@ -131,11 +164,11 @@
         if (!from || !to) return;
 
         if (from.type === to.type && (from.type === 'event' || from.type === 'function')) {
-          const middle = from.type === 'event' ? 'Funktion' : 'Ereignis';
+          const middleType = from.type === 'event' ? 'function' : 'event';
           issues.push({
             level: 'error',
             edgeId: e.id,
-            message: `Zwei ${EPK.Symbols[from.type].label}-Elemente dürfen nicht direkt aufeinanderfolgen — dazwischen fehlt eine ${middle}.`
+            message: `Zwei ${EPK.Symbols[from.type].label}-Elemente dürfen nicht direkt aufeinanderfolgen — dazwischen fehlt ${withArticle(middleType, 'nom')}.`
           });
         }
 
@@ -143,7 +176,7 @@
           issues.push({
             level: 'error',
             edgeId: e.id,
-            message: `Ereignis "${from.label}" darf nicht über einen ${EPK.Symbols[to.type].label} verzweigen — Ereignisse treffen keine Entscheidung. Nutze einen UND-Konnektor oder verzweige erst nach einer Funktion.`
+            message: `Ereignis "${from.label}" darf nicht über ${withArticle(to.type, 'akk')} verzweigen — Ereignisse treffen keine Entscheidung. Nutze einen UND-Konnektor oder verzweige erst nach einer Funktion.`
           });
         }
       });

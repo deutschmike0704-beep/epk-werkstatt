@@ -49,7 +49,13 @@
           ev.preventDefault();
           this._deleteSelected();
         }
-        if (ev.key === 'Escape') this._select(null);
+        if (ev.key === 'Escape') {
+          if (this.connectDrag) {
+            this.connectDrag.line.remove();
+            this.connectDrag = null;
+          }
+          this._select(null);
+        }
       });
 
       this.svg.addEventListener('dragover', (ev) => ev.preventDefault());
