@@ -1,0 +1,13 @@
+{
+  "name": "_template-plugin",
+  "version": "0.1.0",
+  "description": "Ersetze diese Beschreibung: was bündelt dieses Plugin (welche Skills/Hooks/Agents) und für welchen wiederkehrenden Anwendungsfall über Projekte hinweg?",
+  "author": "<Name/Team>",
+  "keywords": ["ai-workstation", "template"],
+  "components": {
+    "skills": [],
+    "hooks": [],
+    "agents": [],
+    "commands": []
+  }
+}

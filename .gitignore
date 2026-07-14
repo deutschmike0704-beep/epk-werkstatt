@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Laufzeit-generierte Beobachtungsdaten (Layer 06) — bewusst nicht versioniert,
+# damit ein frisch geklontes Template nicht mit fremden Session-/Debug-/Kostendaten startet.
+logs/sessions/*.md
+logs/debug/*.md
+logs/metrics/*.jsonl

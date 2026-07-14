@@ -1,0 +1,27 @@
+# Orchestrator-Konfiguration (Layer 00 Core/Bootstrap)
+# Wird von orchestrator/run_workflow.py gelesen.
+
+# Human-in-the-Loop Cost-Gate (siehe CLAUDE.md Abschnitt 3): wird ein Batch von Tasks geschätzt
+# teurer als dieser Betrag, pausiert der Orchestrator und fragt vor dem Start nach Bestätigung.
+cost_gate_usd: 5.00
+
+# Maximale Anzahl an Tasks, die pro Orchestrator-Lauf ohne Rückfrage abgearbeitet werden.
+max_tasks_per_run: 5
+
+# Debug-Loop Retry-Limit (muss mit CLAUDE.md Abschnitt 6 und .claude/agents/debugger.md übereinstimmen).
+debug_max_retries: 3
+
+# Wie der Orchestrator Claude Code aufruft. `claude -p` = headless/non-interaktiver Modus.
+# Passe dies an, falls eine andere CLI-Invocation/Flag-Version verwendet wird.
+claude_binary: "claude"
+invoke_mode: "print"   # "print" -> `claude -p "<prompt>"`
+
+# Priorisierung: Reihenfolge, in der Prioritätsstufen abgearbeitet werden.
+priority_order: ["P0", "P1", "P2", "P3"]
+
+# Pfade (relativ zum Projekt-Root)
+paths:
+  task_queue: "tasks/queue.json"
+  metrics_log: "logs/metrics/cost_tracking.jsonl"
+  debug_log_dir: "logs/debug"
+  session_log_dir: "logs/sessions"
